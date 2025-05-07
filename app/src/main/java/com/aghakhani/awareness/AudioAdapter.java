@@ -2,12 +2,13 @@ package com.aghakhani.awareness;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -21,6 +22,8 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
     private List<Audio> audioList;
     private MediaPlayer mediaPlayer;
     private int currentPlayingPosition = -1;
+    private Handler handler = new Handler();
+    private Runnable runnable;
 
     // Constructor
     public AudioAdapter(Context context, List<Audio> audioList) {
@@ -62,6 +65,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
             holder.progressBar.setVisibility(View.GONE);
             holder.playButton.setVisibility(View.VISIBLE);
             holder.stopButton.setVisibility(View.GONE);
+            handler.removeCallbacks(runnable);
             currentPlayingPosition = -1;
         });
     }
@@ -73,30 +77,25 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
             mediaPlayer.prepare();
             mediaPlayer.start();
             holder.progressBar.setVisibility(View.VISIBLE);
+            holder.progressBar.setMax(100);
             holder.playButton.setVisibility(View.GONE);
             holder.stopButton.setVisibility(View.VISIBLE);
             Toast.makeText(context, "در حال پخش: " + audio.getTitle(), Toast.LENGTH_SHORT).show();
 
-            // Simulate progress (you can enhance this with actual progress tracking)
-            new Thread(() -> {
-                while (mediaPlayer.isPlaying()) {
+            // Update SeekBar
+            handler.postDelayed(runnable = () -> {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                     int progress = (int) (((float) mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration()) * 100);
                     holder.progressBar.setProgress(progress);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    handler.postDelayed(runnable, 1000);
                 }
-                holder.progressBar.setVisibility(View.GONE);
-                holder.playButton.setVisibility(View.VISIBLE);
-                holder.stopButton.setVisibility(View.GONE);
-            }).start();
+            }, 0);
 
             mediaPlayer.setOnCompletionListener(mp -> {
                 holder.progressBar.setVisibility(View.GONE);
                 holder.playButton.setVisibility(View.VISIBLE);
                 holder.stopButton.setVisibility(View.GONE);
+                handler.removeCallbacks(runnable);
                 currentPlayingPosition = -1;
             });
 
@@ -123,7 +122,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
         TextView title;
         Button playButton;
         Button stopButton;
-        ProgressBar progressBar;
+        SeekBar progressBar;
 
         public AudioViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -140,6 +139,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
+            handler.removeCallbacks(runnable);
         }
     }
 }
