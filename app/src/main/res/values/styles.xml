@@ -1,0 +1,16 @@
+<resources>
+    <!-- Custom dialog theme -->
+    <style name="CustomDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/gray_800</item>
+        <item name="android:textColor">@color/gray_600</item>
+        <item name="buttonBarPositiveButtonStyle">@style/CustomButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/CustomButtonStyle</item>
+    </style>
+
+    <!-- Custom button style for dialog -->
+    <style name="CustomButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:backgroundTint">@color/purple_500</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+</resources>

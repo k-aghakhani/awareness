@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,11 +26,16 @@ public class MainActivity extends AppCompatActivity {
     private AudioAdapter audioAdapter;
     private List<Audio> audioList;
     private static final String API_URL = "https://rasfam.ir/upload/get_audio_list.php";
+    private AlertDialog noInternetDialog;
+    private Handler handler;
+    private Runnable checkInternetRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        handler = new Handler(Looper.getMainLooper());
 
         // Check internet connection
         if (!isInternetConnected()) {
@@ -37,11 +44,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Initialize RecyclerView
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        audioList = new ArrayList<>();
-        audioAdapter = new AudioAdapter(this, audioList);
-        recyclerView.setAdapter(audioAdapter);
+        initializeRecyclerView();
 
         // Fetch data from API
         fetchAudioList();
@@ -54,24 +57,51 @@ public class MainActivity extends AppCompatActivity {
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
+    // Initialize RecyclerView
+    private void initializeRecyclerView() {
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        audioList = new ArrayList<>();
+        audioAdapter = new AudioAdapter(this, audioList);
+        recyclerView.setAdapter(audioAdapter);
+    }
+
     // Show no internet dialog
     private void showNoInternetDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
         builder.setTitle("اتصال به دنیای آگاهی!")
                 .setMessage("به نظر می‌رسد به اینترنت وصل نیستید. لطفاً اینترنت را فعال کنید تا از محتوای ارزشمند ما لذت ببرید. ما اینجا منتظر شما هستیم!")
+                .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton("تلاش مجدد", (dialog, which) -> {
-                    if (isInternetConnected()) {
-                        dialog.dismiss();
-                        recreate(); // Restart activity to check again
-                    } else {
-                        Toast.makeText(this, "هنوز به اینترنت وصل نیستید!", Toast.LENGTH_SHORT).show();
-                    }
+                    checkInternetPeriodically();
                 })
                 .setNegativeButton("خروج", (dialog, which) -> finish())
-                .setCancelable(false); // Prevent closing with back button
-        AlertDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false); // Prevent closing by touching outside
-        dialog.show();
+                .setCancelable(false);
+        noInternetDialog = builder.create();
+        noInternetDialog.setCanceledOnTouchOutside(false);
+        noInternetDialog.show();
+    }
+
+    // Periodically check for internet connection
+    private void checkInternetPeriodically() {
+        if (checkInternetRunnable != null) {
+            handler.removeCallbacks(checkInternetRunnable);
+        }
+
+        checkInternetRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (isInternetConnected()) {
+                    noInternetDialog.dismiss();
+                    initializeRecyclerView();
+                    fetchAudioList();
+                } else {
+                    Toast.makeText(MainActivity.this, "هنوز به اینترنت وصل نیستید!", Toast.LENGTH_SHORT).show();
+                    handler.postDelayed(this, 3000); // Check again after 3 seconds
+                }
+            }
+        };
+        handler.post(checkInternetRunnable);
     }
 
     // Fetch audio list from API
@@ -118,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if (audioAdapter != null) {
             audioAdapter.releaseMediaPlayer();
+        }
+        if (handler != null && checkInternetRunnable != null) {
+            handler.removeCallbacks(checkInternetRunnable);
         }
     }
 }
