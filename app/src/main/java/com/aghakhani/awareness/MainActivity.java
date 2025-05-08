@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize RecyclerView
         initializeRecyclerView();
-
-        // Fetch data from API
         fetchAudioList();
     }
 
@@ -73,17 +72,19 @@ public class MainActivity extends AppCompatActivity {
                 .setMessage("به نظر می‌رسد به اینترنت وصل نیستید. لطفاً اینترنت را فعال کنید تا از محتوای ارزشمند ما لذت ببرید. ما اینجا منتظر شما هستیم!")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton("تلاش مجدد", (dialog, which) -> {
-                    checkInternetPeriodically();
+                    startInternetCheck();
                 })
                 .setNegativeButton("خروج", (dialog, which) -> finish())
                 .setCancelable(false);
         noInternetDialog = builder.create();
         noInternetDialog.setCanceledOnTouchOutside(false);
         noInternetDialog.show();
+
+        startInternetCheck();
     }
 
-    // Periodically check for internet connection
-    private void checkInternetPeriodically() {
+    // Start periodic internet check
+    private void startInternetCheck() {
         if (checkInternetRunnable != null) {
             handler.removeCallbacks(checkInternetRunnable);
         }
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     fetchAudioList();
                 } else {
                     Toast.makeText(MainActivity.this, "هنوز به اینترنت وصل نیستید!", Toast.LENGTH_SHORT).show();
-                    handler.postDelayed(this, 3000); // Check again after 3 seconds
+                    handler.postDelayed(this, 3000);
                 }
             }
         };
@@ -139,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        // Add request to Volley queue
         VolleySingleton.getInstance(this).getRequestQueue().add(jsonArrayRequest);
     }
 
@@ -151,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
         }
         if (handler != null && checkInternetRunnable != null) {
             handler.removeCallbacks(checkInternetRunnable);
+        }
+        if (noInternetDialog != null && noInternetDialog.isShowing()) {
+            noInternetDialog.dismiss();
         }
     }
 }
