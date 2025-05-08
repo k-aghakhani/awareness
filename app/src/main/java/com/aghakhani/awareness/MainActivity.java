@@ -56,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Show no internet dialog
     private void showNoInternetDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("عدم اتصال به اینترنت")
-                .setMessage("لطفاً به اینترنت متصل شوید. بدون اینترنت نمی‌توانید محتوا را مشاهده کنید.")
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("اتصال به دنیای آگاهی!")
+                .setMessage("به نظر می‌رسد به اینترنت وصل نیستید. لطفاً اینترنت را فعال کنید تا از محتوای ارزشمند ما لذت ببرید. ما اینجا منتظر شما هستیم!")
                 .setPositiveButton("تلاش مجدد", (dialog, which) -> {
                     if (isInternetConnected()) {
                         dialog.dismiss();
@@ -68,8 +68,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .setNegativeButton("خروج", (dialog, which) -> finish())
-                .setCancelable(false)
-                .show();
+                .setCancelable(false); // Prevent closing with back button
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false); // Prevent closing by touching outside
+        dialog.show();
     }
 
     // Fetch audio list from API
