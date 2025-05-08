@@ -1,7 +1,11 @@
 package com.aghakhani.awareness;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +30,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Check internet connection
+        if (!isInternetConnected()) {
+            showNoInternetDialog();
+            return;
+        }
+
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -35,6 +45,31 @@ public class MainActivity extends AppCompatActivity {
 
         // Fetch data from API
         fetchAudioList();
+    }
+
+    // Check internet connection
+    private boolean isInternetConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    // Show no internet dialog
+    private void showNoInternetDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("عدم اتصال به اینترنت")
+                .setMessage("لطفاً به اینترنت متصل شوید. بدون اینترنت نمی‌توانید محتوا را مشاهده کنید.")
+                .setPositiveButton("تلاش مجدد", (dialog, which) -> {
+                    if (isInternetConnected()) {
+                        dialog.dismiss();
+                        recreate(); // Restart activity to check again
+                    } else {
+                        Toast.makeText(this, "هنوز به اینترنت وصل نیستید!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("خروج", (dialog, which) -> finish())
+                .setCancelable(false)
+                .show();
     }
 
     // Fetch audio list from API
