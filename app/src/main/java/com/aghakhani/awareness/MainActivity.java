@@ -1,11 +1,13 @@
 package com.aghakhani.awareness;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -30,11 +32,21 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog noInternetDialog;
     private Handler handler;
     private Runnable checkInternetRunnable;
+    private Typeface vazirRegular;
+    private Typeface vazirBold;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Load fonts
+        vazirRegular = Typeface.createFromAsset(getAssets(), "fonts/Vazir-Regular.ttf");
+        vazirBold = Typeface.createFromAsset(getAssets(), "fonts/Vazir-Bold.ttf");
+
+        // Apply font to app title
+        TextView tvAppTitle = findViewById(R.id.tv_app_title);
+        tvAppTitle.setTypeface(vazirBold);
 
         handler = new Handler(Looper.getMainLooper());
 
@@ -68,17 +80,43 @@ public class MainActivity extends AppCompatActivity {
     // Show no internet dialog
     private void showNoInternetDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
-        builder.setTitle("اتصال به دنیای آگاهی!")
-                .setMessage("به نظر می‌رسد به اینترنت وصل نیستید. لطفاً اینترنت را فعال کنید تا از محتوای ارزشمند ما لذت ببرید. ما اینجا منتظر شما هستیم!")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton("تلاش مجدد", (dialog, which) -> {
-                    startInternetCheck();
-                })
+
+        // Custom title with font
+        TextView titleView = new TextView(this);
+        titleView.setText("اتصال به دنیای آگاهی!");
+        titleView.setTextSize(20);
+        titleView.setPadding(40, 40, 40, 20);
+        titleView.setTextColor(getResources().getColor(android.R.color.black));
+        titleView.setTypeface(vazirBold);
+        builder.setCustomTitle(titleView);
+
+        // Custom message with font
+        TextView messageView = new TextView(this);
+        messageView.setText("به نظر می‌رسد به اینترنت وصل نیستید. لطفاً اینترنت را فعال کنید تا از محتوای ارزشمند ما لذت ببرید. ما اینجا منتظر شما هستیم!");
+        messageView.setTextSize(16);
+        messageView.setPadding(40, 20, 40, 20);
+        messageView.setTextColor(getResources().getColor(android.R.color.black));
+        messageView.setTypeface(vazirRegular);
+        builder.setView(messageView);
+
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton("تلاش مجدد", (dialog, which) -> startInternetCheck())
                 .setNegativeButton("خروج", (dialog, which) -> finish())
                 .setCancelable(false);
+
         noInternetDialog = builder.create();
         noInternetDialog.setCanceledOnTouchOutside(false);
         noInternetDialog.show();
+
+        // Apply font to dialog buttons
+        Button positiveButton = noInternetDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button negativeButton = noInternetDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        if (positiveButton != null) {
+            positiveButton.setTypeface(vazirRegular);
+        }
+        if (negativeButton != null) {
+            negativeButton.setTypeface(vazirRegular);
+        }
 
         startInternetCheck();
     }

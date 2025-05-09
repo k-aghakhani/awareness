@@ -1,6 +1,7 @@
 package com.aghakhani.awareness;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -24,12 +25,14 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
     private int currentPlayingPosition = -1;
     private Handler handler = new Handler();
     private Runnable runnable;
+    private Typeface vazirRegular;
 
     // Constructor
     public AudioAdapter(Context context, List<Audio> audioList) {
         this.context = context;
         this.audioList = audioList;
         this.mediaPlayer = new MediaPlayer();
+        this.vazirRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Vazir-Regular.ttf");
     }
 
     @NonNull
@@ -43,6 +46,9 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.AudioViewHol
     public void onBindViewHolder(@NonNull AudioViewHolder holder, int position) {
         Audio audio = audioList.get(position);
         holder.title.setText(audio.getTitle());
+        holder.title.setTypeface(vazirRegular);
+        holder.playButton.setTypeface(vazirRegular);
+        holder.stopButton.setTypeface(vazirRegular);
         Glide.with(context).load(audio.getThumbnailUrl()).into(holder.thumbnail);
 
         // Reset UI for new item
