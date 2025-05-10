@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0E6F5"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ارسال پیام"
+            android:textSize="24sp"
+            android:textColor="#333333"
+            android:gravity="center"
+            android:paddingBottom="16dp" />
+
+        <!-- Name Field -->
+        <EditText
+            android:id="@+id/enterName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:hint="نام"
+            android:inputType="textPersonName" />
+
+        <!-- Email Field -->
+        <EditText
+            android:id="@+id/enterEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:hint="ایمیل"
+            android:inputType="textEmailAddress" />
+
+        <!-- Message Field -->
+        <EditText
+            android:id="@+id/enterMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:hint="پیام"
+            android:inputType="textMultiLine"
+            android:lines="5"
+            android:gravity="top|start" />
+
+        <!-- Send Button -->
+        <Button
+            android:id="@+id/sendButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="ارسال"
+            android:backgroundTint="#6A1B9A"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+</ScrollView>
