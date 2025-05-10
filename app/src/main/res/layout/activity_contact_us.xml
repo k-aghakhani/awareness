@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0E6F5"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="تماس با ما"
+            android:textSize="24sp"
+            android:textColor="#333333"
+            android:gravity="center"
+            android:paddingBottom="16dp" />
+
+        <!-- Website Link -->
+        <LinearLayout
+            android:id="@+id/websiteLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_info_details"
+                android:tint="#6A1B9A" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Mazdafar.com"
+                android:textSize="16sp"
+                android:textColor="#333333" />
+
+        </LinearLayout>
+
+        <!-- Instagram Link -->
+        <LinearLayout
+            android:id="@+id/instagramLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_share"
+                android:tint="#E1306C" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="instagram.com/mazdafar.momeni"
+                android:textSize="16sp"
+                android:textColor="#333333" />
+
+        </LinearLayout>
+
+        <!-- Telegram Link -->
+        <LinearLayout
+            android:id="@+id/telegramLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_send"
+                android:tint="#0088CC" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="t.me/mazdafarcom"
+                android:textSize="16sp"
+                android:textColor="#333333" />
+
+        </LinearLayout>
+
+        <!-- Facebook Link -->
+        <LinearLayout
+            android:id="@+id/facebookLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_share"
+                android:tint="#4267B2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="facebook.com/Mazdafar-Momeni-107369438230653"
+                android:textSize="16sp"
+                android:textColor="#333333" />
+
+        </LinearLayout>
+
+        <!-- YouTube Link -->
+        <LinearLayout
+            android:id="@+id/youtubeLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@android:drawable/ic_menu_view"
+                android:tint="#FF0000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="www.youtube.com/@Mazdafar"
+                android:textSize="16sp"
+                android:textColor="#333333" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
