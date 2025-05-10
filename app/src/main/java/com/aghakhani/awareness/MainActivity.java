@@ -1,6 +1,7 @@
 package com.aghakhani.awareness;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -47,6 +48,23 @@ public class MainActivity extends AppCompatActivity {
         // Apply font to app title
         TextView tvAppTitle = findViewById(R.id.tv_app_title);
         tvAppTitle.setTypeface(vazirBold);
+
+        // Apply font to buttons
+        Button contactUsButton = findViewById(R.id.contactUsButton);
+        Button contactFormButton = findViewById(R.id.contactFormButton);
+        contactUsButton.setTypeface(vazirRegular);
+        contactFormButton.setTypeface(vazirRegular);
+
+        // Set up button listeners
+        contactUsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ContactUsActivity.class);
+            startActivity(intent);
+        });
+
+        contactFormButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ContactFormActivity.class);
+            startActivity(intent);
+        });
 
         handler = new Handler(Looper.getMainLooper());
 
