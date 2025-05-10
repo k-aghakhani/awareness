@@ -8,7 +8,9 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -19,6 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,22 +52,9 @@ public class MainActivity extends AppCompatActivity {
         TextView tvAppTitle = findViewById(R.id.tv_app_title);
         tvAppTitle.setTypeface(vazirBold);
 
-        // Apply font to buttons
-        Button contactUsButton = findViewById(R.id.contactUsButton);
-        Button contactFormButton = findViewById(R.id.contactFormButton);
-        contactUsButton.setTypeface(vazirRegular);
-        contactFormButton.setTypeface(vazirRegular);
-
-        // Set up button listeners
-        contactUsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ContactUsActivity.class);
-            startActivity(intent);
-        });
-
-        contactFormButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ContactFormActivity.class);
-            startActivity(intent);
-        });
+        // Set up FAB
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v -> showMenu(v));
 
         handler = new Handler(Looper.getMainLooper());
 
@@ -77,6 +67,22 @@ public class MainActivity extends AppCompatActivity {
         // Initialize RecyclerView
         initializeRecyclerView();
         fetchAudioList();
+    }
+
+    private void showMenu(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.getMenuInflater().inflate(R.menu.fab_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_contact_us) {
+                startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
+                return true;
+            } else if (item.getItemId() == R.id.action_contact_form) {
+                startActivity(new Intent(MainActivity.this, ContactFormActivity.class));
+                return true;
+            }
+            return false;
+        });
+        popup.show();
     }
 
     // Check internet connection
