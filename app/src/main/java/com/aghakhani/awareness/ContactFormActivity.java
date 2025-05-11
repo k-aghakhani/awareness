@@ -4,12 +4,14 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -25,6 +27,7 @@ public class ContactFormActivity extends AppCompatActivity {
     private Button sendButton;
     private ProgressBar progressBar;
     private RequestQueue requestQueue;
+    private static final String TAG = "ContactFormActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,7 @@ public class ContactFormActivity extends AppCompatActivity {
             jsonBody.put("name", name);
             jsonBody.put("email", email);
             jsonBody.put("message", message);
+            Log.d(TAG, "Request Body: " + jsonBody.toString());
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(this, "خطا در آماده‌سازی داده‌ها", Toast.LENGTH_SHORT).show();
@@ -88,12 +92,11 @@ public class ContactFormActivity extends AppCompatActivity {
                 response -> {
                     progressBar.setVisibility(View.GONE);
                     sendButton.setEnabled(true);
+                    Log.d(TAG, "Response: " + response.toString());
                     try {
                         if (response.has("message") && response.getString("message").equals("Email sent successfully")) {
                             Toast.makeText(ContactFormActivity.this, "پیام با موفقیت ارسال شد", Toast.LENGTH_LONG).show();
-                            enterName.setText("");
-                            enterEmail.setText("");
-                            enterMessage.setText("");
+                            clearForm();
                         } else {
                             Toast.makeText(ContactFormActivity.this, "خطا: " + response.getString("error"), Toast.LENGTH_LONG).show();
                         }
@@ -105,8 +108,17 @@ public class ContactFormActivity extends AppCompatActivity {
                 error -> {
                     progressBar.setVisibility(View.GONE);
                     sendButton.setEnabled(true);
-                    Toast.makeText(ContactFormActivity.this, "خطا در اتصال: " + error.toString(), Toast.LENGTH_LONG).show();
-                    error.printStackTrace();
+                    Log.e(TAG, "Volley Error: " + error.toString());
+                    if (error.networkResponse != null) {
+                        Log.e(TAG, "Status Code: " + error.networkResponse.statusCode);
+                        Log.e(TAG, "Response Data: " + new String(error.networkResponse.data));
+                    }
+                    if (error.toString().contains("TimeoutError")) {
+                        Toast.makeText(ContactFormActivity.this, "ارتباط با سرور برقرار نشد. ممکن است پیام شما ارسال شده باشد، لطفاً ایمیل خود را بررسی کنید.", Toast.LENGTH_LONG).show();
+                        clearForm();
+                    } else {
+                        Toast.makeText(ContactFormActivity.this, "خطا در اتصال: " + error.toString(), Toast.LENGTH_LONG).show();
+                    }
                 })
         {
             @Override
@@ -115,6 +127,19 @@ public class ContactFormActivity extends AppCompatActivity {
             }
         };
 
+        // Set timeout and retry policy
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                45000, // Timeout: 45 seconds
+                2,     // Retry 2 times
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT // Backoff multiplier
+        ));
+
         requestQueue.add(jsonObjectRequest);
+    }
+
+    private void clearForm() {
+        enterName.setText("");
+        enterEmail.setText("");
+        enterMessage.setText("");
     }
 }
