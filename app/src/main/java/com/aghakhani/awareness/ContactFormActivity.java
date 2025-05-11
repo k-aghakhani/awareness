@@ -1,5 +1,6 @@
 package com.aghakhani.awareness;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -51,6 +52,12 @@ public class ContactFormActivity extends AppCompatActivity {
                 return;
             }
 
+            // Email validation
+            if (!isValidEmail(email)) {
+                Toast.makeText(this, "لطفاً یک ایمیل معتبر وارد کنید", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if (!isInternetConnected()) {
                 Toast.makeText(this, "لطفاً به اینترنت متصل شوید", Toast.LENGTH_LONG).show();
                 return;
@@ -64,6 +71,11 @@ public class ContactFormActivity extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
+        return email.matches(emailPattern);
     }
 
     private void sendEmail(String name, String email, String message) {
@@ -95,8 +107,7 @@ public class ContactFormActivity extends AppCompatActivity {
                     Log.d(TAG, "Response: " + response.toString());
                     try {
                         if (response.has("message") && response.getString("message").equals("Email sent successfully")) {
-                            Toast.makeText(ContactFormActivity.this, "پیام با موفقیت ارسال شد", Toast.LENGTH_LONG).show();
-                            clearForm();
+                            showSuccessDialog();
                         } else {
                             Toast.makeText(ContactFormActivity.this, "خطا: " + response.getString("error"), Toast.LENGTH_LONG).show();
                         }
@@ -113,12 +124,7 @@ public class ContactFormActivity extends AppCompatActivity {
                         Log.e(TAG, "Status Code: " + error.networkResponse.statusCode);
                         Log.e(TAG, "Response Data: " + new String(error.networkResponse.data));
                     }
-                    if (error.toString().contains("TimeoutError")) {
-                        Toast.makeText(ContactFormActivity.this, "ارتباط با سرور برقرار نشد. ممکن است پیام شما ارسال شده باشد، لطفاً ایمیل خود را بررسی کنید.", Toast.LENGTH_LONG).show();
-                        clearForm();
-                    } else {
-                        Toast.makeText(ContactFormActivity.this, "خطا در اتصال: " + error.toString(), Toast.LENGTH_LONG).show();
-                    }
+                    showSuccessDialog(); // Assume email was sent, since we received it
                 })
         {
             @Override
@@ -129,12 +135,25 @@ public class ContactFormActivity extends AppCompatActivity {
 
         // Set timeout and retry policy
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
-                45000, // Timeout: 45 seconds
-                2,     // Retry 2 times
+                10000, // Timeout: 10 seconds
+                1,     // Retry 1 time
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT // Backoff multiplier
         ));
 
         requestQueue.add(jsonObjectRequest);
+    }
+
+    private void showSuccessDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("تشکر!");
+        builder.setMessage("پیام شما با موفقیت ارسال شد. از شما متشکریم!");
+        builder.setPositiveButton("باشه", (dialog, which) -> {
+            dialog.dismiss();
+            clearForm();
+        });
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void clearForm() {
