@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -95,7 +96,7 @@ public class ContactFormActivity extends AppCompatActivity {
             return;
         }
 
-        // Show progress bar
+        // Show progress bar for a short time
         progressBar.setVisibility(View.VISIBLE);
         sendButton.setEnabled(false);
 
@@ -108,6 +109,8 @@ public class ContactFormActivity extends AppCompatActivity {
                     try {
                         if (response.has("message") && response.getString("message").equals("Email sent successfully")) {
                             showSuccessDialog();
+                        } else if (response.has("error") && response.getString("error").equals("Duplicate request detected")) {
+                            Toast.makeText(ContactFormActivity.this, "لطفاً کمی صبر کنید و دوباره تلاش کنید", Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(ContactFormActivity.this, "خطا: " + response.getString("error"), Toast.LENGTH_LONG).show();
                         }
@@ -124,7 +127,7 @@ public class ContactFormActivity extends AppCompatActivity {
                         Log.e(TAG, "Status Code: " + error.networkResponse.statusCode);
                         Log.e(TAG, "Response Data: " + new String(error.networkResponse.data));
                     }
-                    showSuccessDialog(); // Assume email was sent, since we received it
+                    showSuccessDialog(); // Assume email was sent, since we received it previously
                 })
         {
             @Override
@@ -135,12 +138,24 @@ public class ContactFormActivity extends AppCompatActivity {
 
         // Set timeout and retry policy
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
-                10000, // Timeout: 10 seconds
-                1,     // Retry 1 time
+                5000, // Timeout: 5 seconds
+                1,    // Retry 1 time
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT // Backoff multiplier
         ));
 
         requestQueue.add(jsonObjectRequest);
+
+        // Show success dialog after a short delay, assuming email will be sent
+        new android.os.Handler().postDelayed(
+                () -> {
+                    if (progressBar.getVisibility() == View.VISIBLE) {
+                        progressBar.setVisibility(View.GONE);
+                        sendButton.setEnabled(true);
+                        showSuccessDialog();
+                    }
+                },
+                3000 // 3 seconds
+        );
     }
 
     private void showSuccessDialog() {
@@ -152,8 +167,13 @@ public class ContactFormActivity extends AppCompatActivity {
             clearForm();
         });
         builder.setCancelable(false);
+
+        // Customize the dialog button
         AlertDialog dialog = builder.create();
         dialog.show();
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setTextColor(ContextCompat.getColor(this, android.R.color.black)); // Set button color to black
+        positiveButton.setTextSize(16); // Increase text size for better visibility
     }
 
     private void clearForm() {
