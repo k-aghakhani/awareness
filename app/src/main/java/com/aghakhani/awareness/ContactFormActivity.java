@@ -1,23 +1,42 @@
 package com.aghakhani.awareness;
 
-import android.content.Intent;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ContactFormActivity extends AppCompatActivity {
+
+    private EditText enterName, enterEmail, enterMessage;
+    private Button sendButton;
+    private ProgressBar progressBar;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_form);
 
-        EditText enterName = findViewById(R.id.enterName);
-        EditText enterEmail = findViewById(R.id.enterEmail);
-        EditText enterMessage = findViewById(R.id.enterMessage);
-        Button sendButton = findViewById(R.id.sendButton);
+        enterName = findViewById(R.id.enterName);
+        enterEmail = findViewById(R.id.enterEmail);
+        enterMessage = findViewById(R.id.enterMessage);
+        sendButton = findViewById(R.id.sendButton);
+        progressBar = findViewById(R.id.progressBar);
+        requestQueue = Volley.newRequestQueue(this);
 
         sendButton.setOnClickListener(v -> {
             String name = enterName.getText().toString().trim();
@@ -29,27 +48,73 @@ public class ContactFormActivity extends AppCompatActivity {
                 return;
             }
 
+            if (!isInternetConnected()) {
+                Toast.makeText(this, "لطفاً به اینترنت متصل شوید", Toast.LENGTH_LONG).show();
+                return;
+            }
+
             sendEmail(name, email, message);
         });
     }
 
+    private boolean isInternetConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
     private void sendEmail(String name, String email, String message) {
-        String[] recipients = new String[]{"kiarash1988@gmail.com", "aghakhaniedu@gmail.com"};
-        String subject = "پیام جدید از " + name;
-        String body = "نام: " + name + "\n" +
-                "ایمیل: " + email + "\n" +
-                "پیام: " + message;
+        // URL of the PHP API
+        String url = "https://rasfam.ir/upload/send_email.php";
 
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("message/rfc822");
-        intent.putExtra(Intent.EXTRA_EMAIL, recipients);
-        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        intent.putExtra(Intent.EXTRA_TEXT, body);
-
+        // Creating JSON object for POST request
+        JSONObject jsonBody = new JSONObject();
         try {
-            startActivity(Intent.createChooser(intent, "ارسال ایمیل..."));
-        } catch (Exception e) {
-            Toast.makeText(this, "خطا در ارسال ایمیل: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            jsonBody.put("name", name);
+            jsonBody.put("email", email);
+            jsonBody.put("message", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "خطا در آماده‌سازی داده‌ها", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        // Show progress bar
+        progressBar.setVisibility(View.VISIBLE);
+        sendButton.setEnabled(false);
+
+        // Sending POST request
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+                response -> {
+                    progressBar.setVisibility(View.GONE);
+                    sendButton.setEnabled(true);
+                    try {
+                        if (response.has("message") && response.getString("message").equals("Email sent successfully")) {
+                            Toast.makeText(ContactFormActivity.this, "پیام با موفقیت ارسال شد", Toast.LENGTH_LONG).show();
+                            enterName.setText("");
+                            enterEmail.setText("");
+                            enterMessage.setText("");
+                        } else {
+                            Toast.makeText(ContactFormActivity.this, "خطا: " + response.getString("error"), Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(ContactFormActivity.this, "خطا در پردازش پاسخ", Toast.LENGTH_LONG).show();
+                    }
+                },
+                error -> {
+                    progressBar.setVisibility(View.GONE);
+                    sendButton.setEnabled(true);
+                    Toast.makeText(ContactFormActivity.this, "خطا در اتصال: " + error.toString(), Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                })
+        {
+            @Override
+            public String getBodyContentType() {
+                return "application/json; charset=utf-8";
+            }
+        };
+
+        requestQueue.add(jsonObjectRequest);
     }
 }
