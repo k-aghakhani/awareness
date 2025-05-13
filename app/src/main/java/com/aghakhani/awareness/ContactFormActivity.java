@@ -7,6 +7,8 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -43,7 +45,15 @@ public class ContactFormActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         requestQueue = Volley.newRequestQueue(this);
 
+        // Load animation for the button
+        Animation buttonAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
+        sendButton.setAnimation(buttonAnimation);
+
         sendButton.setOnClickListener(v -> {
+            // Play animation on click
+            Animation clickAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
+            v.startAnimation(clickAnimation);
+
             String name = enterName.getText().toString().trim();
             String email = enterEmail.getText().toString().trim();
             String message = enterMessage.getText().toString().trim();
@@ -172,8 +182,9 @@ public class ContactFormActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
         Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        positiveButton.setTextColor(ContextCompat.getColor(this, android.R.color.black)); // Set button color to black
-        positiveButton.setTextSize(16); // Increase text size for better visibility
+        positiveButton.setTextColor(ContextCompat.getColor(this, android.R.color.white)); // Change to white text
+        positiveButton.setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_purple)); // Background color
+        positiveButton.setTextSize(16);
     }
 
     private void clearForm() {
