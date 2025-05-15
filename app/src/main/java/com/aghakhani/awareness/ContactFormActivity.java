@@ -45,12 +45,14 @@ public class ContactFormActivity extends AppCompatActivity {
         enterMessage = findViewById(R.id.enterMessage);
         sendButton = findViewById(R.id.sendButton);
         progressBar = findViewById(R.id.progressBar);
-        formContainer = findViewById(android.R.id.content).findViewById(android.R.id.primary);
+        formContainer = findViewById(R.id.form_container); // Use the correct ID
         requestQueue = Volley.newRequestQueue(this);
 
         // Apply animation to the form container
-        Animation slideUp = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
-        formContainer.setAnimation(slideUp);
+        if (formContainer != null) {
+            Animation slideUp = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
+            formContainer.setAnimation(slideUp);
+        }
 
         // Load animation for the button
         Animation buttonAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
