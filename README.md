@@ -31,7 +31,7 @@ implementation 'com.android.volley:volley:1.2.1'
 implementation 'androidx.media3:media3-exoplayer:1.3.1' // For audio playback
 
 
-Configure the API endpoint in ContactFormActivity.java (replace https://rasfam.ir/upload/send_email.php with your server URL).
+Configure the API endpoint in ContactFormActivity.java 
 Add audio files to the res/raw directory (e.g., awareness_audio1.mp3).
 Build and run the app on an emulator or device.
 
