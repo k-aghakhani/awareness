@@ -11,6 +11,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +31,7 @@ public class ContactFormActivity extends AppCompatActivity {
     private EditText enterName, enterEmail, enterMessage;
     private Button sendButton;
     private ProgressBar progressBar;
+    private LinearLayout formContainer;
     private RequestQueue requestQueue;
     private static final String TAG = "ContactFormActivity";
 
@@ -43,7 +45,12 @@ public class ContactFormActivity extends AppCompatActivity {
         enterMessage = findViewById(R.id.enterMessage);
         sendButton = findViewById(R.id.sendButton);
         progressBar = findViewById(R.id.progressBar);
+        formContainer = findViewById(android.R.id.content).findViewById(android.R.id.primary);
         requestQueue = Volley.newRequestQueue(this);
+
+        // Apply animation to the form container
+        Animation slideUp = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
+        formContainer.setAnimation(slideUp);
 
         // Load animation for the button
         Animation buttonAnimation = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
@@ -182,9 +189,11 @@ public class ContactFormActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
         Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-        positiveButton.setTextColor(ContextCompat.getColor(this, android.R.color.white)); // Change to white text
-        positiveButton.setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_purple)); // Background color
+        positiveButton.setTextColor(ContextCompat.getColor(this, android.R.color.white));
+        positiveButton.setBackgroundColor(ContextCompat.getColor(this, android.R.color.holo_purple));
         positiveButton.setTextSize(16);
+        positiveButton.setPadding(20, 10, 20, 10);
+        positiveButton.setElevation(4);
     }
 
     private void clearForm() {

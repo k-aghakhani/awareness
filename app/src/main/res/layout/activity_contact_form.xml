@@ -27,14 +27,16 @@
             android:gravity="center"
             android:paddingBottom="24dp" />
 
-        <!-- Name Field -->
+        <!-- Name Field with Icon -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:boxBackgroundMode="outline"
             app:boxStrokeColor="#6A1B9A"
-            app:hintTextColor="#6A1B9A">
+            app:hintTextColor="#6A1B9A"
+            app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+            app:startIconTint="#6A1B9A">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/enterName"
@@ -47,14 +49,16 @@
                 android:textColorHint="#757575" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Email Field -->
+        <!-- Email Field with Icon -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:boxBackgroundMode="outline"
             app:boxStrokeColor="#6A1B9A"
-            app:hintTextColor="#6A1B9A">
+            app:hintTextColor="#6A1B9A"
+            app:startIconDrawable="@android:drawable/ic_dialog_email"
+            app:startIconTint="#6A1B9A">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/enterEmail"
@@ -67,14 +71,16 @@
                 android:textColorHint="#757575" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Message Field -->
+        <!-- Message Field with Icon -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:boxBackgroundMode="outline"
             app:boxStrokeColor="#6A1B9A"
-            app:hintTextColor="#6A1B9A">
+            app:hintTextColor="#6A1B9A"
+            app:startIconDrawable="@android:drawable/ic_dialog_info"
+            app:startIconTint="#6A1B9A">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/enterMessage"
