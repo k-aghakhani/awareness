@@ -12,12 +12,13 @@
 
         <!-- Title -->
         <TextView
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingBottom="16dp"
             android:text="تماس با ما"
-            android:textColor="#333333"
+            android:textColor="#6A1B9A"
             android:textSize="24sp" />
 
         <!-- Website Link -->
