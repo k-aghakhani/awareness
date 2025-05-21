@@ -1,9 +1,19 @@
 <resources>
+    <!-- Popup Menu Customization -->
+    <style name="PopupMenuStyle" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:popupBackground">@drawable/popup_background</item>
+        <item name="android:textColorPrimary">#4A148C</item>
+        <item name="android:layoutDirection">rtl</item> <!-- Right-to-left layout -->
+        <item name="android:gravity">end</item> <!-- Align to end for RTL -->
+        <item name="android:dropDownHorizontalOffset">0dp</item> <!-- Adjust horizontal offset -->
+        <item name="android:dropDownVerticalOffset">0dp</item> <!-- Adjust vertical offset -->
+    </style>
+
     <!-- Existing theme (keep this as the main theme) -->
     <style name="Theme.Awareness" parent="Theme.AppCompat.Light.NoActionBar">
-
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryDark">@color/purple_700</item>
         <item name="colorAccent">@color/purple_200</item>
+        <item name="popupMenuStyle">@style/PopupMenuStyle</item>
     </style>
 </resources>

@@ -8,23 +8,25 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.SpannableString;
-import android.text.style.TypefaceSpan;
-import android.view.MenuItem;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.PopupMenu;
+import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,60 +74,66 @@ public class MainActivity extends AppCompatActivity {
         fetchAudioList();
     }
 
-  /*  private void showMenu(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        popup.getMenuInflater().inflate(R.menu.fab_menu, popup.getMenu());
-        popup.setOnMenuItemClickListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.action_intellectual_property) {
-                startActivity(new Intent(MainActivity.this, IntellectualPropertyActivity.class));
-                return true;
-            } else if (itemId == R.id.action_contact_us) {
-                startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
-                return true;
-            } else if (itemId == R.id.action_contact_form) {
-                startActivity(new Intent(MainActivity.this, ContactFormActivity.class));
-                return true;
+    private void showMenu(View v) {
+        ListPopupWindow popup = new ListPopupWindow(this);
+        popup.setAnchorView(v); // Anchor to FAB
+
+        // Menu items
+        String[] menuItems = new String[]{
+                "مالکیت فکری",
+                "تماس با ما",
+                "فرم تماس"
+        };
+
+        // Custom ArrayAdapter with RTL support
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.menu_item, menuItems) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.menu_item, parent, false);
+                }
+                TextView textView = convertView.findViewById(android.R.id.text1);
+                textView.setText(menuItems[position]);
+                textView.setTextDirection(View.TEXT_DIRECTION_RTL); // Ensure RTL text
+                textView.setGravity(Gravity.END); // Align text to the right
+                textView.setTypeface(vazirRegular); // Apply custom font
+                textView.setTextColor(getResources().getColor(android.R.color.black));
+                return convertView;
             }
-            return false;
+        };
+
+        // Set the adapter
+        popup.setAdapter(adapter);
+
+        // Set width and height
+        popup.setWidth(400); // Increased width for better text display
+        popup.setHeight(ListPopupWindow.WRAP_CONTENT);
+
+        // Align to the right (RTL)
+        popup.setHorizontalOffset(-v.getWidth()); // Align to the right of FAB
+        popup.setVerticalOffset(-v.getHeight() / 2); // Adjust vertical position
+
+        // Set background (use the same as PopupMenu)
+        popup.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
+
+        // Handle item clicks
+        popup.setOnItemClickListener((parent, view, position, id) -> {
+            switch (position) {
+                case 0: // Intellectual Property
+                    startActivity(new Intent(MainActivity.this, IntellectualPropertyActivity.class));
+                    break;
+                case 1: // Contact Us
+                    startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
+                    break;
+                case 2: // Contact Form
+                    startActivity(new Intent(MainActivity.this, ContactFormActivity.class));
+                    break;
+            }
+            popup.dismiss();
         });
+
         popup.show();
-    }*/
-  private void showMenu(View v) {
-      // Use styled context to apply custom popup background and text colors from styles.xml
-      Context wrapper = new android.view.ContextThemeWrapper(this, R.style.PopupMenuStyle);
-
-      // Set gravity to END for RTL (Right To Left) alignment
-      PopupMenu popup = new PopupMenu(wrapper, v, android.view.Gravity.END);
-
-      popup.getMenuInflater().inflate(R.menu.fab_menu, popup.getMenu());
-
-      // Apply Persian font to menu items using SpannableString
-      for (int i = 0; i < popup.getMenu().size(); i++) {
-          MenuItem item = popup.getMenu().getItem(i);
-          SpannableString spanString = new SpannableString(item.getTitle());
-          spanString.setSpan(new TypefaceSpan("fonts/Vazir-Bold.ttf"), 0, spanString.length(), 0); // No custom font directly
-          item.setTitle(spanString);
-      }
-
-      popup.setOnMenuItemClickListener(item -> {
-          int itemId = item.getItemId();
-          if (itemId == R.id.action_intellectual_property) {
-              startActivity(new Intent(MainActivity.this, IntellectualPropertyActivity.class));
-              return true;
-          } else if (itemId == R.id.action_contact_us) {
-              startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
-              return true;
-          } else if (itemId == R.id.action_contact_form) {
-              startActivity(new Intent(MainActivity.this, ContactFormActivity.class));
-              return true;
-          }
-          return false;
-      });
-
-      popup.show();
-  }
-
+    }
 
     // Check internet connection
     private boolean isInternetConnected() {
