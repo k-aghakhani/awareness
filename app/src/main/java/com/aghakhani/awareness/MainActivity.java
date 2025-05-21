@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         popup.setAdapter(adapter);
 
         // Set width and height
-        popup.setWidth(500); // Increased width for better text and icon display
+        popup.setWidth(600); // Increased width for better text and icon display
         popup.setHeight(ListPopupWindow.WRAP_CONTENT);
 
         // Align to the right (RTL)
