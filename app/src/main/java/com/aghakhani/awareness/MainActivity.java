@@ -8,6 +8,9 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.PopupMenu;
@@ -17,11 +20,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,21 +72,60 @@ public class MainActivity extends AppCompatActivity {
         fetchAudioList();
     }
 
-    private void showMenu(View v) {
+  /*  private void showMenu(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.getMenuInflater().inflate(R.menu.fab_menu, popup.getMenu());
         popup.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.action_contact_us) {
+            int itemId = item.getItemId();
+            if (itemId == R.id.action_intellectual_property) {
+                startActivity(new Intent(MainActivity.this, IntellectualPropertyActivity.class));
+                return true;
+            } else if (itemId == R.id.action_contact_us) {
                 startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
                 return true;
-            } else if (item.getItemId() == R.id.action_contact_form) {
+            } else if (itemId == R.id.action_contact_form) {
                 startActivity(new Intent(MainActivity.this, ContactFormActivity.class));
                 return true;
             }
             return false;
         });
         popup.show();
-    }
+    }*/
+  private void showMenu(View v) {
+      // Use styled context to apply custom popup background and text colors from styles.xml
+      Context wrapper = new android.view.ContextThemeWrapper(this, R.style.PopupMenuStyle);
+
+      // Set gravity to END for RTL (Right To Left) alignment
+      PopupMenu popup = new PopupMenu(wrapper, v, android.view.Gravity.END);
+
+      popup.getMenuInflater().inflate(R.menu.fab_menu, popup.getMenu());
+
+      // Apply Persian font to menu items using SpannableString
+      for (int i = 0; i < popup.getMenu().size(); i++) {
+          MenuItem item = popup.getMenu().getItem(i);
+          SpannableString spanString = new SpannableString(item.getTitle());
+          spanString.setSpan(new TypefaceSpan("fonts/Vazir-Bold.ttf"), 0, spanString.length(), 0); // No custom font directly
+          item.setTitle(spanString);
+      }
+
+      popup.setOnMenuItemClickListener(item -> {
+          int itemId = item.getItemId();
+          if (itemId == R.id.action_intellectual_property) {
+              startActivity(new Intent(MainActivity.this, IntellectualPropertyActivity.class));
+              return true;
+          } else if (itemId == R.id.action_contact_us) {
+              startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
+              return true;
+          } else if (itemId == R.id.action_contact_form) {
+              startActivity(new Intent(MainActivity.this, ContactFormActivity.class));
+              return true;
+          }
+          return false;
+      });
+
+      popup.show();
+  }
+
 
     // Check internet connection
     private boolean isInternetConnected() {

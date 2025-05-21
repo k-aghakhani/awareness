@@ -1,4 +1,10 @@
 <resources>
+    <!-- Popup Menu Customization -->
+    <style name="PopupMenuStyle" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:popupBackground">@drawable/popup_background</item>
+        <item name="android:textColorPrimary">#4A148C</item>
+    </style>
+
     <!-- Custom dialog theme -->
     <style name="CustomDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@android:color/white</item>
@@ -8,7 +14,7 @@
         <item name="buttonBarNegativeButtonStyle">@style/CustomButtonStyle</item>
     </style>
 
-    <!-- Custom button style for dialog -->
+    <!-- Custom button style -->
     <style name="CustomButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:backgroundTint">@color/purple_500</item>
         <item name="android:textColor">@android:color/white</item>

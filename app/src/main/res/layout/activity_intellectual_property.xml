@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0E6F5"
+    android:padding="16dp"
+    android:layoutDirection="rtl">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layoutDirection="rtl">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="مالکیت فکری"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#6A1B9A"
+            android:gravity="center"
+            android:paddingBottom="16dp" />
+
+        <!-- Intellectual Property Text -->
+        <TextView
+            android:id="@+id/intellectual_property_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="تمامی فایل‌های صوتی منتشرشده در این نرم‌افزار، برگرفته از سخنرانی‌ها، ویدئوها، سمینارها و مطالب آموزشی منتشرشده توسط جناب آقای مزدافر مؤمنی در کانال‌های رسمی ایشان، از جمله یوتیوب، اینستاگرام و وب‌سایت رسمی ایشان است. این برنامه تنها با هدف گردآوری و سهولت دسترسی به محتوای آموزشی ایشان طراحی شده و تمامی مطالب بدون هیچ‌گونه دخل و تصرف، و با حفظ امانت‌داری کامل ارائه می‌گردند.\n\nدرباره مزدافر مؤمنی\n\nمن، مزدافر مؤمنی، متولد سال ۱۳۴۸ در تهران هستم. تمام مطالب ارائه شده در این سایت، شامل مقالات، کتاب‌ها، ویدئوها، و همچنین سمینارها و دوره‌های آموزشی، با موضوع محیط زیست، سلامت عمومی، گیاهخواری، آب آشامیدنی و مدیریت ذهن، حاصل سال‌ها تحقیق و مطالعۀ شخصی است؛ بدون هیچ‌گونه وابستگی، ارتباط یا حمایتی از سوی هیچ مؤسسه، سازمان، دانشگاه، نهاد، وزارتخانه و... .\n\nدر فضای مجازی، برخی افراد با لطف خود، بنده را با عناوینی نظیر «دکتر» یا «استاد» معرفی کرده‌اند. اما من، مزدافر مؤمنی، صراحتاً اعلام می‌کنم که در هیچ رشته‌ای دارای مدرک دکترا نبوده و در هیچ زمینه‌ای عنوان «استاد» ندارم. استفاده از این عناوین نادرست، گرچه از روی حسن نیت صورت گرفته، می‌تواند موجب سوءتفاهم شود. هدف از این توضیح، شفاف‌سازی و پرهیز از هرگونه برداشت نادرست است.\n\nموضوع اصلی آموزش‌های این مجموعه، افزایش آگاهی در زمینه تندرستی، شناخت عملکرد ذهن و بدن، شعور جسم، ساختار کوانتومی بدن و مکانیزم‌های حیاتی آن، براساس مطالعات شخصی و تجربیات سالیان گذشته است. امید است این مسیر، هرچند کوچک، در کاهش رنج‌های بیهوده انسانی موثر باشد.\n\nشایان ذکر است که تمامی قطعات موسیقی استفاده‌شده در ویدئوها و فایل‌های صوتی (شامل تیتراژ ابتدایی، پایانی و موسیقی پس‌زمینه) اوریجینال بوده و توسط خود ایشان ساخته و اجرا شده است.\n\nبا آرزوی تندرستی، شادی و آگاهی برای همگان."
+            android:textSize="16sp"
+            android:textColor="#333333"
+            android:gravity="right"
+            android:textAlignment="gravity"
+            android:justificationMode="inter_word"
+            android:padding="16dp" />
+
+    </LinearLayout>
+</ScrollView>
