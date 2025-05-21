@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
                 String[] item = getItem(position);
                 textView.setText(item[0]);
                 textView.setTextDirection(View.TEXT_DIRECTION_RTL); // Ensure RTL text
-                textView.setGravity(Gravity.END); // Align text to the right
                 textView.setTypeface(vazirRegular); // Apply custom font
                 textView.setTextColor(getResources().getColor(android.R.color.black));
 
@@ -120,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         popup.setAdapter(adapter);
 
         // Set width and height
-        popup.setWidth(400); // Increased width for better text and icon display
+        popup.setWidth(500); // Increased width for better text and icon display
         popup.setHeight(ListPopupWindow.WRAP_CONTENT);
 
         // Align to the right (RTL)
