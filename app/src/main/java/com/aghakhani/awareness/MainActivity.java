@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,26 +79,39 @@ public class MainActivity extends AppCompatActivity {
         ListPopupWindow popup = new ListPopupWindow(this);
         popup.setAnchorView(v); // Anchor to FAB
 
-        // Menu items
-        String[] menuItems = new String[]{
-                "مالکیت فکری",
-                "تماس با ما",
-                "فرم تماس"
+        // Menu items with icons
+        String[][] menuData = {
+                {"مالکیت فکری", "ic_info"},
+                {"تماس با ما", "ic_phone"},
+                {"فرم تماس", "ic_edit"}
         };
 
-        // Custom ArrayAdapter with RTL support
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.menu_item, menuItems) {
+        // Custom ArrayAdapter
+        ArrayAdapter<String[]> adapter = new ArrayAdapter<String[]>(this, R.layout.menu_item, menuData) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 if (convertView == null) {
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.menu_item, parent, false);
                 }
                 TextView textView = convertView.findViewById(android.R.id.text1);
-                textView.setText(menuItems[position]);
+                ImageView iconView = convertView.findViewById(R.id.icon);
+
+                String[] item = getItem(position);
+                textView.setText(item[0]);
                 textView.setTextDirection(View.TEXT_DIRECTION_RTL); // Ensure RTL text
                 textView.setGravity(Gravity.END); // Align text to the right
                 textView.setTypeface(vazirRegular); // Apply custom font
                 textView.setTextColor(getResources().getColor(android.R.color.black));
+
+                // Set icon based on resource name
+                String iconName = item[1];
+                int resId = getResources().getIdentifier(iconName, "drawable", getPackageName());
+                if (resId != 0) {
+                    iconView.setImageResource(resId);
+                } else {
+                    iconView.setVisibility(View.GONE); // Hide if icon not found
+                }
+
                 return convertView;
             }
         };
@@ -106,14 +120,14 @@ public class MainActivity extends AppCompatActivity {
         popup.setAdapter(adapter);
 
         // Set width and height
-        popup.setWidth(400); // Increased width for better text display
+        popup.setWidth(400); // Increased width for better text and icon display
         popup.setHeight(ListPopupWindow.WRAP_CONTENT);
 
         // Align to the right (RTL)
         popup.setHorizontalOffset(-v.getWidth()); // Align to the right of FAB
         popup.setVerticalOffset(-v.getHeight() / 2); // Adjust vertical position
 
-        // Set background (use the same as PopupMenu)
+        // Set background
         popup.setBackgroundDrawable(getResources().getDrawable(R.drawable.popup_background));
 
         // Handle item clicks
