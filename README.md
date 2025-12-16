@@ -92,3 +92,5 @@ Inspired by the journey of scientific self-awareness and personal growth. 🌱
 
 ## 🌟 Happy Exploring! 
 🌟#AwarenessExpansion #Wellness #Mindfulness #QuantumBody
+
+Made with ❤️ and ☕
